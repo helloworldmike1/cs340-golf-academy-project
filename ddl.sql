@@ -1,0 +1,244 @@
+-- disable commits and foreign key checks at the beginning of your file
+SET FOREIGN_KEY_CHECKS=0;
+SET AUTOCOMMIT = 0;
+
+
+-- drop Membership table if it exists 
+drop table if exists Memberships; 
+
+-- create Memberships table
+create table Memberships ( 
+ membershipId int AUTO_INCREMENT UNIQUE NOT NULL, 
+ name varchar (30) not null, 
+ price decimal (12,2) not null, 
+ offering varchar (140) not null, 
+ primary key ( membershipId)
+);
+
+-- Insert into Memeberships to show the memeberships available at the academy
+
+insert into Memberships (name, price, offering) 
+values 
+('Pro Plan',
+ 300.00, 
+'Unlimited practice at the facility, a fee club fitting, a 20% discount on balls and gloves, and two lessons per month'), 
+('Individual', 
+125.00, 'Unlimited practice at the facility, free-regripping, guest Fridays, 10% off balls, gloves and lesson packs, and One 30 min lesson a month') , 
+('Junior Plan', 
+215.00, 
+'One 30-minute lesson each week, along with membership to the Academy'
+);
+
+
+-- drop Instructors table if it exists 
+drop table if exists Instructors; 
+
+-- create Instructors table 
+create table Instructors (
+instructorId int auto_increment unique not NULL ,
+firstName varchar(140) not null,
+lastName varchar(140) not null,
+email varchar(45) not null,
+phone varchar(45) not null,
+bio varchar(140) not null,
+ primary key (instructorId)
+ );
+
+ insert into Instructors (firstName, lastName, email, phone, bio)
+ 
+  values ( 
+    'Tyler', 'Brooks', 'tbrooks@beavergolfacademy.com', '832-943-4821',
+    'PGA-certified coach specializing in swing mechanics. Helps players of all levels build consistency.'
+  ),
+
+  ( 
+    'Lauren', 'Mitchell', 'lmitchell@beavergolfacademy.com', '281-641-6593',
+    'Former college golfer at LSU. Focused on short game and fundamentals. Passionate about helping golfers enjoy the game.'
+  ), 
+
+  ( 
+    'Marcus', 'Delgado', 'mdelgado@beavergolfacademy.com', '832-651-2748',
+    'Former mini-tour player with years of coaching experience. Focuses on course strategy and lowering scores.'
+  );
+
+
+
+
+-- drop Bays table if it exists 
+drop table if exists Bays;  
+
+
+ create  table Bays ( 
+bayId int auto_increment unique not NULL ,
+name varchar (30) not null,
+handedness varchar (10) not null ,
+active char (1) not null default 'Y',
+primary key (bayId)
+
+ ) ;
+
+ --insert into Bays 
+ insert into Bays (name, handedness) 
+    values 
+ ('Bay 1', 'RH'), 
+ ('Bay 2', 'RH/LH'),
+ ('Bay 3', 'RH/LH'),
+ ('Bay 4', 'RH');
+
+
+ -- drop Customers table if it exists 
+drop table if exists Customers; 
+
+-- creating Customers table
+create table Customers ( 
+ customerId int AUTO_INCREMENT UNIQUE NOT NULL ,
+ firstName varchar (140) not null, 
+ lastName varchar (140) not null, 
+ email varchar (140) not null, 
+ phone varchar (45) not null , 
+ membershipId int ,
+ primary key (customerId), 
+ foreign key (membershipId) references Memberships(membershipId)
+
+);
+
+insert into Customers (firstName, 
+lastName, 
+email, 
+phone, 
+membershipId
+)
+
+values 
+('Jason', 'Turner', 'jason.turner92@gmail.com', '832-946-2147',
+(select membershipId from Memberships where name='Pro Plan') ),
+
+('Emily', 'Carter', 'emily_carter88@yahoo.com', '281-672-8932',
+(select membershipId from Memberships where name='Pro Plan') ),
+
+('Daniel', 'Nguyen', 'dnguyen1@gmail.com', '713-418-4478',
+(select membershipId from Memberships where name='Individual') ),
+
+('Sophia', 'Ramirez', 'sophieramirez21@gmail.com', '832-731-6621',
+(select membershipId from Memberships where name='Junior Plan') );
+
+
+ -- drop Lesson table if it exists 
+drop table if exists Lessons; 
+
+-- Lesson create table 
+  create table Lessons ( 
+lessonId int not null auto_increment primary key,
+lessonTime datetime not null,
+duration int not null,
+instructorId int not null ,
+bayId int not null ,
+foreign key (instructorId) references Instructors(instructorId),
+foreign key (bayId) references Bays(bayId)
+  );
+
+
+insert into Lessons (lessonTime, duration, instructorId, bayId)
+
+
+ values ( '2026-04-27 09:00:00',30,
+ (select instructorId from Instructors where firstName='Lauren' and lastName= 'Mitchell'),
+  (select bayId from Bays where name='Bay 1')
+),
+
+ ( '2026-04-27 10:00:00',60,
+ (select instructorId from Instructors where firstName='Lauren' and lastName= 'Mitchell'),
+  (select bayId from Bays where name='Bay 3')
+), 
+
+ ( '2026-05-27 09:00:00',30,
+ (select instructorId from Instructors where firstName='Marcus' and lastName= 'Delgado'),
+  (select bayId from Bays where name='Bay 2')
+),
+
+ ( '2026-05-27 11:00:00',60,
+ (select instructorId from Instructors where firstName='Tyler' and lastName= 'Brooks'),
+  (select bayId from Bays where name='Bay 2')
+);
+
+
+ -- drop LessonParticipants table if it exists 
+drop table if exists LessonParticipants; 
+
+--create lesson participants table
+create table LessonParticipants ( 
+lessonId int not null, 
+customerId int not null,
+foreign key (lessonId ) references Lessons(lessonId),
+foreign key (customerId ) references Customers(customerId),
+primary key ( lessonId,customerId) );
+
+
+-- insert into LessonParticipants
+insert into LessonParticipants values ( 
+
+(select l.lessonId 
+from Lessons l
+JOIN Instructors i ON l.instructorId = i.instructorId
+where l.lessonTime='2026-04-27 09:00:00' and 
+i.firstName='Lauren' and  
+i.lastName= 'Mitchell'), 
+
+
+(select customerId 
+from Customers 
+where  firstName='Jason' and  
+lastName= 'Turner')
+
+),
+
+( 
+(select l.lessonId 
+from Lessons l
+JOIN Instructors i ON l.instructorId = i.instructorId
+where l.lessonTime='2026-04-27 09:00:00' and 
+i.firstName='Lauren' and  
+i.lastName= 'Mitchell'), 
+
+(select customerId 
+from Customers 
+where  firstName='Emily' and  
+lastName= 'Carter')
+),
+
+
+( 
+(select l.lessonId 
+from Lessons l
+JOIN Instructors i ON l.instructorId = i.instructorId
+where l.lessonTime='2026-05-27 09:00:00' and 
+i.firstName='Marcus' and 
+i.lastName= 'Delgado'), 
+
+(select customerId 
+from Customers 
+where  firstName='Daniel' and  
+lastName= 'Nguyen')
+
+),
+
+( 
+(select l.lessonId 
+from Lessons l
+JOIN Instructors i ON l.instructorId = i.instructorId
+where l.lessonTime='2026-05-27 11:00:00' and 
+i.firstName='Tyler' and 
+i.lastName= 'Brooks'), 
+
+(select customerId from Customers where  firstName='Sophia' and  lastName= 'Ramirez')
+)
+;
+
+
+
+
+
+
+-- re enable foreign key checks at the end to minimize import errors
+SET FOREIGN_KEY_CHECKS=1;
+COMMIT;
