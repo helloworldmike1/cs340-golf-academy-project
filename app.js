@@ -111,10 +111,14 @@ app.get('/customers', async function (req, res) {
         // In query1, select customers
         const query1 = 'Select C.customerId,  C.firstName, C.lastName, C.email, C.phone, C.membershipId from Customers C left join Memberships M on C.membershipId=M.membershipId ;';   
         const [customers] = await db.query(query1);
+
+        const query2 = 'select membershipId, name from Memberships;';  
+        const [memberships] = await db.query(query2);
+
     
         // Render the Instructor.hbs file, and also send the renderer
         //  an object that contains our instructors
-        res.render('customers', { customers: customers });
+        res.render('customers', { customers, memberships });
     } catch (error) {
         console.error('Error executing queries:', error);
         // Send a generic error message to the browser
