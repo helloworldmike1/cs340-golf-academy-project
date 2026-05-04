@@ -1,0 +1,30 @@
+<h1>Memberships</h1>
+
+{{! READ table }}
+<table>
+    <thead>
+        {{! For the table header row, we print the DB attribute names }}
+        <tr>
+            {{#each memberships.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+        
+        </tr>
+    </thead>
+
+    <tbody>
+        {{! For each row, print the membershipId, name of membership, price and what it offers }}
+        {{#each memberships}}
+        <tr>
+            <td>{{this.membershipId}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.price}}</td>
+            <td>{{this.offering}}</td>
+            
+
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

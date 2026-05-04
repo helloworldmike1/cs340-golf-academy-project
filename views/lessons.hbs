@@ -1,0 +1,61 @@
+<h2>Lessons</h2>
+
+{{! READ table }}
+<table>
+    <thead>
+        {{! For the table header row, we print the DB attribute names }}
+        <tr>
+            {{#each lessons.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+        
+        </tr>
+    </thead>
+
+    <tbody>
+        {{! For each row, print the lessonid, time, duration, instructor and bay}}
+        {{#each lessons}}
+        <tr>
+            <td>{{this.lessonId}}</td>
+            <td>{{this.lessonTime}}</td>
+            <td>{{this.duration}}</td>
+            <td>{{this.instructorId}}</td>
+            <td>{{this.bayId}}</td>
+    
+
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+
+
+<h2>Lesson Participants</h2>
+
+{{! READ table }}
+<table>
+    <thead>
+        {{! For the table header row, we print the DB attribute names }}
+        <tr>
+            {{#each lessonparticipants.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+        
+        </tr>
+    </thead>
+
+    <tbody>
+        {{! For each row, print the Lesson particiapants}}
+        {{#each lessonparticipants}}
+        <tr>
+            <td>{{this.lessonId}}</td>
+            <td>{{this.customerId}}</td>
+
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

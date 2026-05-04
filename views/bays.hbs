@@ -1,0 +1,76 @@
+<h1>Bays</h1>
+
+{{! READ table }}
+<table>
+    <thead>
+        {{! For the table header row, we print the DB attribute names }}
+        <tr>
+            <th>bayId</th>
+            <th>name</th>
+            <th>handedness</th>
+            <th>active</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{! For each row, print the id, name, handedness, and active for bays}}
+        {{#each bays}}
+        <tr>
+            <td>{{this.bayId}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.handedness}}</td>
+            <td>{{this.active}}</td>
+          
+
+{{! DELETE form }}
+         <td>
+    <form method="POST" action="/delete-bay">
+        <input type='hidden' name='delete_bay_id' value='{{this.bayId}}' />
+        <button type='submit'>Delete</button>
+     </form>
+    </td>
+  </tr>
+  {{/each}}
+</tbody>
+</table>
+
+{{! UPDATE form }}
+<h2>Update a  Bay</h2>
+<form class='cuForm' method="POST" action="/update-bay">
+    <label for='update_bay_id'>Bay to Update: </label>
+    <select name='update_bay_id' id='update_bay_id' required>
+        <option value='' disabled selected>Select a Bay</option>
+        {{#each bays}}
+        <option value='{{this.bayId}}'>
+            {{this.bayId}}
+            -
+            {{this.name}}
+        </option>
+        {{/each}}
+    </select>
+
+    <label for='update_bay_name'>Bay Name: </label>
+        <input type="text" name="update_bay_name" id="update_bay_name">
+        
+
+
+    <label for='update_bay_handedness'>Handedness: </label>
+    <select name='update_bay_handedness' id='update_bay_handedness'>
+        <option value='' disabled selected>Select</option>
+        <option value='RH'>RH</option>
+        <option value='LH'>LH</option>
+        <option value='RH/LH'>RH/LH</option>
+    </select>
+
+
+
+    <label for='update_bay_active'>Active: </label>
+    <select name='update_bay_active' id='update_bay_active'>
+        <option value='' disabled selected>Select</option>
+        <option value='Y'>Yes</option>
+        <option value='N'>No</option>
+    </select>
+
+    <input type='submit' />
+</form>

@@ -1,0 +1,31 @@
+<h1>Instructors</h1>
+
+{{! READ table }}
+<table>
+    <thead>
+        {{! For the table header row, we print the DB attribute names }}
+        <tr>
+            {{#each instructors.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+        
+        </tr>
+    </thead>
+
+    <tbody>
+        {{! For each row, print the Instructorid, firstName, lastName, email, phone, bio}}
+        {{#each instructors}}
+        <tr>
+            <td>{{this.instructorId}}</td>
+            <td>{{this.firstName}}</td>
+            <td>{{this.lastName}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.phone}}</td>
+           <td>{{this.bio}}</td>
+
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
