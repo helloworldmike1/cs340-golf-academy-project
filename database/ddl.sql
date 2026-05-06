@@ -188,8 +188,8 @@ VALUES
 ( 
   '2026-04-27 09:00:00',
   30,
-  (SELECT instructorId FROM Instructors WHERE  firstName = 'Lauren' AND lastName = 'Mitchell'),
-  (SELECT bayId FROM Bays WEHRE NAME = 'Bay 1')
+  (SELECT instructorId FROM Instructors WHERE firstName = 'Lauren' AND lastName = 'Mitchell'),
+  (SELECT bayId FROM Bays WHERE NAME = 'Bay 1')
 ),
 ( 
   '2026-04-27 10:00:00',60,
@@ -206,7 +206,7 @@ VALUES
   '2026-05-27 11:00:00',
   60,
   (SELECT instructorId FROM Instructors WHERE firstName = 'Tyler' AND lastName = 'Brooks'),
-  (SELECT bayId FROM Bays WEHRE NAME = 'Bay 2')
+  (SELECT bayId FROM Bays WHERE NAME = 'Bay 2')
 );
 
 
