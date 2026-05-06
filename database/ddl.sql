@@ -172,8 +172,8 @@ drop table if exists LessonParticipants;
 create table LessonParticipants ( 
 lessonId int not null, 
 customerId int not null,
-foreign key (lessonId ) references Lessons(lessonId),
-foreign key (customerId ) references Customers(customerId),
+foreign key (lessonId ) references Lessons(lessonId) ON DELETE CASCADE,
+foreign key (customerId ) references Customers(customerId) ON DELETE CASCADE,
 primary key ( lessonId,customerId) );
 
 
