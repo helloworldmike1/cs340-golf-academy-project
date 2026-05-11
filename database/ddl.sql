@@ -216,16 +216,18 @@ DROP TABLE IF EXISTS LessonParticipants;
 
 --create LessonParticipants table
 CREATE TABLE LessonParticipants ( 
+  lessonParticipantId int not null AUTO_INCREMENT,
   lessonId int not null, 
   customerId int not null,
   foreign key (lessonId ) references Lessons(lessonId) ON DELETE CASCADE,
   foreign key (customerId ) references Customers(customerId) ON DELETE CASCADE,
-  primary key ( lessonId,customerId) 
+  unique (lessonId, customerId),
+  primary key (  lessonParticipantId ) 
 );
 
 -- insert into LessonParticipants
-INSERT INTO LessonParticipants 
-VALUES
+INSERT INTO LessonParticipants   (lessonId, CustomerId)
+VALUES 
 ( 
   (
     SELECT l.lessonId 
