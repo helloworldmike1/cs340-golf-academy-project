@@ -91,7 +91,7 @@ app.get("/memberships", async function (req, res) {
     const [memberships] = await db.query(query1);
 
     // Render the Instructor.hbs file, and also send the renderer
-    //  an object that contains our instructors
+    //  an object that contains our memberships
     res.render("memberships", { memberships: memberships });
   } catch (error) {
     console.error("Error executing queries:", error);
@@ -108,14 +108,14 @@ app.get("/customers", async function (req, res) {
     // Create and execute our queries
     // In query1, select customers
     const query1 =
-      "Select C.customerId,  C.firstName, C.lastName, C.email, C.phone, C.membershipId from Customers C left join Memberships M on C.membershipId=M.membershipId ;";
+      "Select C.customerId,  C.firstName, C.lastName, C.email, C.phone, M.name as membership from Customers C left join Memberships M on C.membershipId=M.membershipId ;";
     const [customers] = await db.query(query1);
 
     const query2 = "select membershipId, name from Memberships;";
     const [memberships] = await db.query(query2);
 
     // Render the Instructor.hbs file, and also send the renderer
-    //  an object that contains our instructors
+    //  an object that contains our customers
     res.render("customers", { customers, memberships });
   } catch (error) {
     console.error("Error executing queries:", error);
@@ -126,22 +126,53 @@ app.get("/customers", async function (req, res) {
   }
 });
 
-// Lessons // Particaipants
+// Lessons // Participants
 app.get("/lessons", async function (req, res) {
   try {
     // Create and execute our queries
     // In query1, select customers
-    const query1 =
-      "select lessonId, lessonTime, duration, instructorId, bayId from Lessons;";
+  const query1 = `
+SELECT
+    l.lessonId,
+    c.customerId,
+    DATE_FORMAT(l.lessonTime, '%m/%d/%Y %h:%i %p') AS lessonTime,
+    l.duration,
+    CONCAT(i.firstName, ' ', i.lastName) AS instructor,
+    b.name AS bay,
+    ifnull( CONCAT(c.firstName, ' ', c.lastName) , 'Open') AS participant
+FROM Lessons l
+JOIN Instructors i
+    ON l.instructorId = i.instructorId
+JOIN Bays b
+    ON l.bayId = b.bayId
+LEFT JOIN LessonParticipants lp
+    ON l.lessonId = lp.lessonId
+LEFT JOIN Customers c
+    ON lp.customerId = c.customerId
+  ORDER BY   l.lessonId ASC;
+`;
     const [lessons] = await db.query(query1);
 
     const query2 = "select lessonId, customerId  from LessonParticipants;";
 
     const [lessonparticipants] = await db.query(query2);
 
+     const query3 =
+      "select instructorId, firstName, lastName from Instructors ;";
+    const [instructors] = await db.query(query3);
+
+      const query4 = "SELECT bayId, name FROM Bays WHERE active='Y';";
+    const [bays] = await db.query(query4);
+
+        const query5 =
+      "Select C.customerId,  C.firstName, C.lastName from Customers C ";
+    const [customers] = await db.query(query5);
+
+
+
     // Render the Instructor.hbs file, and also send the renderer
-    //  an object that contains our instructors
-    res.render("lessons", { lessons, lessonparticipants });
+    //  an object that contains our lessons
+    res.render("lessons", { lessons, lessonparticipants, instructors, bays, customers  });
   } catch (error) {
     console.error("Error executing queries:", error);
     // Send a generic error message to the browser

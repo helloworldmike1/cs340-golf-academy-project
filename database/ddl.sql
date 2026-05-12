@@ -7,8 +7,13 @@ SET AUTOCOMMIT = 0;
 
 
 
--- drop Membership table if it exists 
-DROP TABLE IF EXISTS Memberships; 
+-- drop tables if it exists 
+DROP TABLE IF EXISTS LessonParticipants;
+DROP TABLE IF EXISTS Lessons;
+DROP TABLE IF EXISTS Customers;
+DROP TABLE IF EXISTS Instructors;
+DROP TABLE IF EXISTS Bays;
+DROP TABLE IF EXISTS Memberships;
 
 -- create Memberships table
 CREATE TABLE Memberships ( 
@@ -38,10 +43,6 @@ VALUES
   'One 30-minute lesson each week, along with membership to the Academy'
 );
 
-
-
--- drop Instructors table if it exists 
-DROP TABLE IF EXISTS Instructors;
 
 -- create Instructors table 
 CREATE TABLE Instructors (
@@ -81,8 +82,6 @@ VALUES
 
 
 
--- drop Bays table if it exists 
-DROP TABLE IF EXISTS Bays;
 
 -- create Bays table
 CREATE TABLE Bays ( 
@@ -114,9 +113,6 @@ VALUES
 );
 
 
- -- drop Customers table if it exists 
-DROP TABLE IF EXISTS Customers;
-
 -- create Customers table
 CREATE TABLE Customers ( 
  customerId int AUTO_INCREMENT UNIQUE NOT NULL ,
@@ -126,7 +122,7 @@ CREATE TABLE Customers (
  phone varchar (45) not null , 
  membershipId int ,
  primary key (customerId), 
- foreign key (membershipId) references Memberships(membershipId)
+ foreign key (membershipId) references Memberships(membershipId) on DELETE SET NULL
 );
 
 -- insert into Customers
@@ -168,8 +164,7 @@ VALUES
 );
 
 
- -- drop Lesson table if it exists 
-DROP TABLE IF EXISTS Lessons;
+
 
 -- create Lessons Table
 CREATE TABLE Lessons ( 
@@ -178,8 +173,8 @@ CREATE TABLE Lessons (
   duration int not null,
   instructorId int not null ,
   bayId int not null ,
-  foreign key (instructorId) references Instructors(instructorId),
-  foreign key (bayId) references Bays(bayId)
+  foreign key (instructorId) references Instructors(instructorId) ON DELETE RESTRICT,
+  foreign key (bayId) references Bays(bayId) ON DELETE RESTRICT
 );
 
 -- insert into Lessons
@@ -211,8 +206,6 @@ VALUES
 
 
 
- -- drop LessonParticipants table if it exists 
-DROP TABLE IF EXISTS LessonParticipants;
 
 --create LessonParticipants table
 CREATE TABLE LessonParticipants ( 
@@ -226,7 +219,7 @@ CREATE TABLE LessonParticipants (
 );
 
 -- insert into LessonParticipants
-INSERT INTO LessonParticipants   (lessonId, CustomerId)
+INSERT INTO LessonParticipants   (lessonId, customerId)
 VALUES 
 ( 
   (
