@@ -5,11 +5,13 @@
     <thead>
         {{! For the table header row, we print the DB attribute names }}
         <tr>
-            {{#each lessons.[0]}}
-            <th>
-                {{@key}}
-            </th>
-            {{/each}}
+            <th>Lesson ID</th>
+            <th>Lesson Time</th>
+            <th>Duration (mins)</th>
+            <th>Instructor</th>
+            <th>Bays</th>
+            <th>Participant</th>
+            <th>Remove Participant from Lesson</th>
         
         </tr>
     </thead>
@@ -21,8 +23,17 @@
             <td>{{this.lessonId}}</td>
             <td>{{this.lessonTime}}</td>
             <td>{{this.duration}}</td>
-            <td>{{this.instructorId}}</td>
-            <td>{{this.bayId}}</td>
+            <td>{{this.instructor}}</td>
+            <td>{{this.bay}}</td>
+            <td>{{this.participant}}</td>
+
+            <td>
+                <form method="POST" action="/delete-lesson-participant">
+                    <input type="hidden" name="lessonId" value="{{this.lessonId}}" >
+                    <input type="hidden" name="participant" value="{{this.customerId}}">
+                    <input type="submit" value="Remove Participant">
+                </form>
+            </td> 
     
 
         </tr>
@@ -31,31 +42,66 @@
 </table>
 
 
+{{! CREATE form add to lessons }}
+<h3>Add a Lesson</h3>
+<form id='add_lesson_form' method="POST" action="/add-lesson">
 
-<h2>Lesson Participants</h2>
 
-{{! READ table }}
-<table>
-    <thead>
-        {{! For the table header row, we print the DB attribute names }}
-        <tr>
-            {{#each lessonparticipants.[0]}}
-            <th>
-                {{@key}}
-            </th>
-            {{/each}}
-        
-        </tr>
-    </thead>
+    <label for='create_lesson_time'>Lesson Time: </label>
+    <input type='datetime-local' name='create_lesson_time' id='create_lesson_time' required />
 
-    <tbody>
-        {{! For each row, print the Lesson particiapants}}
-        {{#each lessonparticipants}}
-        <tr>
-            <td>{{this.lessonId}}</td>
-            <td>{{this.customerId}}</td>
+    <label for='create_lesson_duration'>Duration: </label>
+    <input type='number' name='create_lesson_duration' id='create_lesson__duration' required />
 
-        </tr>
+    <label for='instructorId_from_add_lesson'>Instructor: </label>
+    <select name='instructorId_from_add_lesson' id='instructorId_from_add_lesson' required>
+        <option value="" selected>Select an Instructor</option>
+        {{#each instructors}}
+        <option value='{{this.instructorId}}'>{{this.firstName}} {{this.lastName}}</option>
         {{/each}}
-    </tbody>
-</table>
+    </select>
+
+     <label for='bayId_from_add_lesson'>Bay: </label>
+    <select name='bayId_from_add_lesson' id='bayId_from_add_lesson' required>
+        <option value="" selected>Select a Bay</option>
+        {{#each bays}}
+        <option value='{{this.bayId}}'>{{this.name}} </option>
+        {{/each}}
+    </select>
+
+    <input type='submit' />
+</form>
+
+
+
+{{! CREATE form add customer to a lesson - LessonParticipant}}
+<h3>Add Customer to a Lesson</h3>
+<form id='add_lesson_participant_form' method="POST" action="/add-lesson-participant">
+
+
+    <label for='add_customerid_to_participants_dropdown'>Customer: </label>
+    <select name='add_customerid_to_participants_dropdown' id='add_customerid_to_participants_dropdown' required>
+        <option value="" selected>Select a Customer</option>
+        {{#each  customers}}
+        <option value='{{this.customerId}}'>{{this.firstName}} {{this.lastName}} </option>
+        {{/each}}
+    </select>
+
+ 
+    <label for='add_lessonid_to_participants_dropdown'>Lesson: </label>
+    <select name='add_lessonid_to_participants_dropdown' id='add_lessonid_to_participants_dropdown' required>
+        <option value="" selected>Select a Lesson</option>
+        {{#each lessons}}
+        <option value='{{this.lessonId}}'>{{this.lessonTime}} {{this.instructor}} {{this.bay}}</option>
+        {{/each}}
+    </select>
+
+
+    <input type='submit' />
+</form>
+
+
+
+
+
+
