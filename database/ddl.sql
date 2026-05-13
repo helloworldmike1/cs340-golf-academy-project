@@ -213,7 +213,7 @@ CREATE TABLE LessonParticipants (
   lessonId int not null, 
   customerId int not null,
   foreign key (lessonId ) references Lessons(lessonId) ON DELETE CASCADE,
-  foreign key (customerId ) references Customers(customerId) ON DELETE CASCADE,
+  foreign key (customerId ) references Customers(customerId) ON DELETE RESTRICT,
   unique (lessonId, customerId),
   primary key (  lessonParticipantId ) 
 );
