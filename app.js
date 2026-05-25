@@ -1,3 +1,18 @@
+
+//Citation for the following function:
+// Date: 05/25/2026
+//Copied from /OR/ Adapted from /OR/ Based on: copied inital setup & selects of app.js from this exporlation.
+// Source URL: https://canvas.oregonstate.edu/courses/2042369/pages/exploration-web-application-technology-2?module_item_id=26640188
+
+
+
+//Citation for the following function:
+// Date: 05/25/2026
+//Copied from /OR/ Adapted from /OR/ Based on: copied from the starter code for CRUD routes
+// Source URL: https://canvas.oregonstate.edu/courses/2042369/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=26640205
+
+console.log("THIS IS MY APP.JS");
+
 // ########################################
 // ########## SETUP
 require("dotenv").config();
@@ -31,13 +46,9 @@ app.set("view engine", ".hbs"); // Use handlebars engine for *.hbs files.
 // ########## ROUTE HANDLERS
 
 // READ ROUTES
-app.get("/", async function (req, res) {
-  try {
+// Home page
+app.get("/", function (req, res) {
     res.render("home");
-  } catch (error) {
-    console.error("Error rendering home page:", error);
-    res.status(500).send("An error occurred while rendering the home page.");
-  }
 });
 
 // Bays
@@ -126,6 +137,7 @@ app.get("/customers", async function (req, res) {
   }
 });
 
+
 // Lessons // Participants
 app.get("/lessons", async function (req, res) {
   try {
@@ -182,6 +194,59 @@ LEFT JOIN Customers c
   }
 });
 
+// Reset Database
+app.post("/reset-db", async function (req, res) {
+  try {
+    await db.query("CALL sp_resetdatabase();");
+
+    res.redirect("/"); 
+  } catch (error) {
+    console.error("Error resetting database:", error);
+
+    res
+      .status(500)
+      .send("An error occurred while resetting the database.");
+  }
+});
+
+
+// DELETE ROUTES
+//Delete bays
+
+app.post("/delete-bay", async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+        // Create and execute our query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_DeleteBay(?);`;
+        await db.query(query1, [data.delete_bay_id]);
+
+        console.log(`DELETE bays. ID: ${data.delete_bay_id} `
+        );
+
+        // Redirect the user to the updated webpage data
+        res.redirect('/bays');
+    } catch (error) {
+        console.error(error);
+
+          if (error.errno ===1451) { 
+            return res.status(400).send (
+              "Cannot delete bay. Currently holding lessons."
+            );
+          }
+
+
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+ 
+
+
 // ########################################
 // ########## LISTENER
 
@@ -192,3 +257,5 @@ app.listen(PORT, function () {
       "; press Ctrl-C to terminate.",
   );
 });
+
+

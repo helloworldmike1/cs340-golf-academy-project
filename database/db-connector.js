@@ -1,3 +1,12 @@
+//Citation for the following function:
+// Date: 05/25/2026
+//Copied from /OR/ Adapted from /OR/ Based on: copied from the starter code.
+// Source URL: https://canvas.oregonstate.edu/courses/2042369/pages/exploration-web-application-technology-2?module_item_id=26640188
+
+
+
+
+
 require("dotenv").config();
 const mysql = require("mysql2");
 

@@ -1,3 +1,6 @@
+-- Citation for the following function:
+-- Date: 05/25/2026
+--Source: format pulled from Canvas lecture. Other wise written manually. AI was promted to help convert into the correct date format was wanting
 
 -- original get all Customers query 
 SELECT C.customerID,  C.firstName, C.lastName, C.email, C.phone, C.membershipId FROM Customers;
