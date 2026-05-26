@@ -1,11 +1,23 @@
 -- Michael Pearsall & Richard Hong
 -- Group # 23
 
+
+-- nothing to cite. written manually 
+
 -- disable commits and foreign key checks at the beginning of your file
+
+
+DROP PROCEDURE IF EXISTS sp_resetdatabase; 
+
+DELIMITER //
+
+CREATE PROCEDURE sp_resetdatabase () 
+
+
+
+BEGIN
 SET FOREIGN_KEY_CHECKS=0;
 SET AUTOCOMMIT = 0;
-
-
 
 -- drop tables if it exists 
 DROP TABLE IF EXISTS LessonParticipants;
@@ -92,7 +104,7 @@ CREATE TABLE Bays (
   primary key (bayId)
 );
 
---insert into Bays 
+-- insert into Bays 
 INSERT INTO Bays (name, handedness) 
 VALUES 
 (
@@ -207,7 +219,7 @@ VALUES
 
 
 
---create LessonParticipants table
+-- create LessonParticipants table
 CREATE TABLE LessonParticipants ( 
   lessonParticipantId int not null AUTO_INCREMENT,
   lessonId int not null, 
@@ -258,8 +270,18 @@ VALUES
   (SELECT customerId FROM Customers WHERE firstName = 'Sophia' AND lastName = 'Ramirez')
 );
 
-
-
 -- re-enable foreign key checks at the end to minimize import errors
 SET FOREIGN_KEY_CHECKS=1;
+
+
+END // 
+DELIMITER ; 
+
+CALL sp_resetdatabase();
+
 COMMIT;
+
+
+
+
+
