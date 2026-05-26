@@ -11,7 +11,7 @@
 //Copied from /OR/ Adapted from /OR/ Based on: copied from the starter code for CRUD routes
 // Source URL: https://canvas.oregonstate.edu/courses/2042369/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=26640205
 
-console.log("THIS IS MY APP.JS");
+
 
 // ########################################
 // ########## SETUP
