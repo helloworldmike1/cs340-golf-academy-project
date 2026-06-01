@@ -39,3 +39,75 @@ BEGIN
 
 END //
 DELIMITER ;
+
+
+-- #############################
+-- UPDATE bay
+-- #############################
+DROP PROCEDURE IF EXISTS sp_UpdateBay;
+
+DELIMITER //
+CREATE PROCEDURE sp_UpdateBay(
+    IN p_id          INT,
+    IN p_name        VARCHAR(30),
+    IN p_handedness  VARCHAR(10),
+    IN p_active      CHAR(1)
+)
+BEGIN
+    -- error handling
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Roll back the transaction on any error
+        ROLLBACK;
+        -- Propagate the error to the caller
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+
+        -- COALESCE keeps the existing column value when a parameter is NULL,
+        -- allowing partial updates (only changed fields need to be passed in)
+        UPDATE Bays
+        SET name        = COALESCE(p_name, name),
+            handedness  = COALESCE(p_handedness, handedness),
+            active      = COALESCE(p_active, active)
+        WHERE bayId = p_id;
+
+    COMMIT;
+
+END //
+DELIMITER ;
+
+
+-- #############################
+-- CREATE customer
+-- #############################
+DROP PROCEDURE IF EXISTS sp_CreateCustomer;
+
+DELIMITER //
+CREATE PROCEDURE sp_CreateCustomer(
+    IN p_firstName    VARCHAR(140),
+    IN p_lastName     VARCHAR(140),
+    IN p_email        VARCHAR(140),
+    IN p_phone        VARCHAR(45),
+    IN p_membershipId INT
+)
+BEGIN
+    -- error handling
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Roll back the transaction on any error
+        ROLLBACK;
+        -- Propagate the error to the caller
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+
+        INSERT INTO Customers (firstName, lastName, email, phone, membershipId)
+        VALUES (p_firstName, p_lastName, p_email, p_phone, p_membershipId);
+
+    COMMIT;
+
+END //
+DELIMITER ;
