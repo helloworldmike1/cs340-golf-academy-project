@@ -111,3 +111,92 @@ BEGIN
 
 END //
 DELIMITER ;
+
+
+-- #############################
+-- CREATE Lessons
+-- #############################
+DROP PROCEDURE IF EXISTS sp_CreateLesson;
+
+DELIMITER //
+CREATE PROCEDURE sp_CreateLesson(
+    IN p_lessonTime DATETIME,
+    IN p_duration INT,
+    IN p_instructorId INT, 
+    IN p_bayId INT 
+    )
+BEGIN
+    INSERT INTO Lessons (lessonTime, duration, instructorId, bayId) 
+    VALUES (p_lessonTime, p_duration, p_instructorId, p_bayId);
+
+  
+END //
+DELIMITER ;
+
+
+
+
+-- #############################
+-- CREATE Lesson Participants
+-- #############################
+DROP PROCEDURE IF EXISTS sp_CreateLessonParticipant;
+
+DELIMITER //
+CREATE PROCEDURE sp_CreateLessonParticipant(
+    IN p_lessonId INT,
+    IN p_customerId INT 
+    )
+BEGIN
+    INSERT INTO LessonParticipants (lessonId, customerId) 
+    VALUES (p_lessonId, p_customerId);
+
+  
+END //
+DELIMITER ;
+
+
+-- #############################
+-- DELETE Lesson Participants
+-- #############################
+
+DROP PROCEDURE IF EXISTS sp_DeleteLessonParticipant;
+
+
+
+
+DELIMITER //
+CREATE PROCEDURE sp_DeleteLessonParticipant(IN p_lessonId INT, IN p_customerId INT)
+BEGIN
+    DECLARE error_message VARCHAR(255); 
+
+    -- error handling
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Roll back the transaction on any error
+        ROLLBACK;
+        -- Propogate the custom error message to the caller
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+       
+        DELETE FROM LessonParticipants WHERE lessonId = p_lessonId and customerId = p_customerId;
+
+
+        -- ROW_COUNT() returns the number of rows affected by the preceding statement.
+        IF ROW_COUNT() = 0 THEN
+            set error_message = CONCAT('No matching record found in LessonParticipants for Lesson id: ', 
+            p_lessonId, 
+            ' Customer id: ',
+            p_customerId);
+            -- Trigger custom error, invoke EXIT HANDLER
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+        END IF;
+
+    COMMIT;
+
+END //
+DELIMITER ;
+
+
+
