@@ -9,7 +9,7 @@
 // Source URL: https://canvas.oregonstate.edu/courses/2042369/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=26640205
 
 
-console.log("MICHAEL TEST BUILD");
+
 // ########################################
 // ########## SETUP
 require("dotenv").config();
@@ -241,7 +241,7 @@ app.post("/delete-bay", async function (req, res) {
 });
 
 
-console.log("REGISTERING add-lesson-participant route");
+
 
 
 // DELETE LessonParticipant
