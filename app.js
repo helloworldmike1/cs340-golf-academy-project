@@ -8,6 +8,8 @@
 //Copied from /OR/ Adapted from /OR/ Based on: copied from the starter code for CRUD routes
 // Source URL: https://canvas.oregonstate.edu/courses/2042369/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=26640205
 
+
+
 // ########################################
 // ########## SETUP
 require("dotenv").config();
@@ -238,6 +240,36 @@ app.post("/delete-bay", async function (req, res) {
   }
 });
 
+
+
+
+
+// DELETE LessonParticipant
+app.post('/delete-lesson-participant', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+        // Create and execute our query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_DeleteLessonParticipant(?,?);`;
+        await db.query(query1, [data.lessonId, data.participant]);
+
+        console.log(`DELETE Lesson ID: ${data.lessonId} ` +
+            `Customer ID: ${data.participant}`
+        );
+
+        // Redirect the user to the updated webpage data
+        res.redirect('/lessons');
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
 // UPDATE ROUTES
 // Update Bay
 app.post("/update-bay", async function (req, res) {
@@ -316,6 +348,85 @@ app.post("/create-customer", async function (req, res) {
       .send("An error occurred while executing the database queries.");
   }
 });
+
+// CREATE Lesson
+app.post('/add-lesson', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+      
+        // Create and execute our queries
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_CreateLesson(?, ?, ?, ?);`;
+
+        // 
+         await db.query(query1, [
+            data.create_lesson_time,
+            data.create_lesson_duration,
+            data.instructorId_from_add_lesson,
+            data.bayId_from_add_lesson
+        ]);
+
+        console.log(`CREATE Lesson: ${data.create_lesson_time} ` +
+            `Duration: ${data.create_lesson_duration} `+
+             `Instructor:${data.instructorId_from_add_lesson}` +
+             `Bay:${data.bayId_from_add_lesson}` 
+        );
+
+        // Redirect the user to the updated webpage
+        res.redirect('/lessons');
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
+
+
+
+
+// CREATE LessonParticipant
+app.post('/add-lesson-participant', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+      
+        // Create and execute our queries
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_CreateLessonParticipant(?, ?);`;
+
+        // 
+         await db.query(query1, [
+            data.add_lessonid_to_participants_dropdown,
+            data.add_customerid_to_participants_dropdown
+           
+        ]);
+
+        console.log(`CREATE Customer ID: ${data.add_customerid_to_participants_dropdown} ` +
+            `Lesson Id ID: ${data.add_lessonid_to_participants_dropdown} `
+            
+        );
+
+        // Redirect the user to the updated webpage
+        res.redirect('/lessons');
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
+
+
+
+
 
 // ########################################
 // ########## LISTENER
