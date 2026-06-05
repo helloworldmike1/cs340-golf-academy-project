@@ -35,11 +35,15 @@
             <td>{{this.participant}}</td>
 
             <td>
-                <form method="POST" action="/delete-lesson-participant">
-                    <input type="hidden" name="lessonId" value="{{this.lessonId}}" >
-                    <input type="hidden" name="participant" value="{{this.customerId}}">
-                    <input type="submit" value="Remove Participant">
-                </form>
+                {{#if this.customerId}}
+                    <form method="POST" action="/delete-lesson-participant">
+                        <input type="hidden" name="lessonId" value="{{this.lessonId}}" >
+                        <input type="hidden" name="participant" value="{{this.customerId}}">
+                        <input type="submit" value="Remove Participant">
+                    </form>
+                {{else}}
+                No participant
+                {{/if}}
             </td> 
     
 
