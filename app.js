@@ -8,6 +8,8 @@
 //Copied from /OR/ Adapted from /OR/ Based on: copied from the starter code for CRUD routes
 // Source URL: https://canvas.oregonstate.edu/courses/2042369/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=26640205
 
+
+
 // ########################################
 // ########## SETUP
 require("dotenv").config();
@@ -236,6 +238,36 @@ app.post("/delete-bay", async function (req, res) {
       .status(500)
       .send("An error occurred while executing the database queries.");
   }
+});
+
+
+
+
+
+// DELETE LessonParticipant
+app.post('/delete-lesson-participant', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+        // Create and execute our query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_DeleteLessonParticipant(?,?);`;
+        await db.query(query1, [data.lessonId, data.participant]);
+
+        console.log(`DELETE Lesson ID: ${data.lessonId} ` +
+            `Customer ID: ${data.participant}`
+        );
+
+        // Redirect the user to the updated webpage data
+        res.redirect('/lessons');
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
 });
 
 // UPDATE ROUTES
