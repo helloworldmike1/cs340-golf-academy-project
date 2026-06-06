@@ -317,6 +317,115 @@ app.post("/create-customer", async function (req, res) {
   }
 });
 
+// CREATE Lesson
+app.post('/add-lesson', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+      
+        // Create and execute our queries
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_CreateLesson(?, ?, ?, ?);`;
+
+        // 
+         await db.query(query1, [
+            data.create_lesson_time,
+            data.create_lesson_duration,
+            data.instructorId_from_add_lesson,
+            data.bayId_from_add_lesson
+        ]);
+
+        console.log(`CREATE Lesson: ${data.create_lesson_time} ` +
+            `Duration: ${data.create_lesson_duration} `+
+             `Instructor:${data.instructorId_from_add_lesson}` +
+             `Bay:${data.bayId_from_add_lesson}` 
+        );
+
+        // Redirect the user to the updated webpage
+        res.redirect('/lessons');
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
+
+
+
+
+// CREATE LessonParticipant
+app.post('/add-lesson-participant', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+      
+        // Create and execute our queries
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_CreateLessonParticipant(?, ?);`;
+
+        // 
+         await db.query(query1, [
+            data.add_lessonid_to_participants_dropdown,
+            data.add_customerid_to_participants_dropdown
+           
+        ]);
+
+        console.log(`CREATE Customer ID: ${data.add_customerid_to_participants_dropdown} ` +
+            `Lesson Id ID: ${data.add_lessonid_to_participants_dropdown} `
+            
+        );
+
+        // Redirect the user to the updated webpage
+        res.redirect('/lessons');
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
+
+
+
+
+
+// UPDATE LessonParticipant
+app.post('/update-lesson-participant', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+        // Create and execute our query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_UpdateLessonParticipant(?, ?, ?);`;
+        await db.query(query1, [
+            data.previous_lessonId,
+            data.customerId,
+            data.updated_lessonId
+        ]);
+
+        console.log(`UPDATE LessonParticipant. Customer ID: ${data.customerId} ` +
+            `from Lesson ID: ${data.previous_lessonId} to Lesson ID: ${data.updated_lessonId}`
+        );
+
+        // Redirect the user to the updated webpage
+        res.redirect('/lessons');
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
 // ########################################
 // ########## LISTENER
 
