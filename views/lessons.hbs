@@ -112,6 +112,38 @@
 </form>
 
 
+{{! UPDATE form - switch a participant to a different lesson }}
+<h3>Switch Participant to Another Lesson</h3>
+<form id='update_lesson_participant_form' method="POST" action="/update-lesson-participant">
+
+    <label for='update_customer_dropdown'>Customer: </label>
+    <select name='customerId' id='update_customer_dropdown' required>
+        <option value="" selected>Select a Customer</option>
+        {{#each customers}}
+        <option value='{{this.customerId}}'>{{this.firstName}} {{this.lastName}}</option>
+        {{/each}}
+    </select>
+
+    <label for='update_previous_lesson_dropdown'>Current Lesson: </label>
+    <select name='previous_lessonId' id='update_previous_lesson_dropdown' required>
+        <option value="" selected>Select Current Lesson</option>
+        {{#each lessons}}
+        <option value='{{this.lessonId}}'>{{this.lessonTime}} {{this.instructor}} {{this.bay}}</option>
+        {{/each}}
+    </select>
+
+    <label for='update_new_lesson_dropdown'>New Lesson: </label>
+    <select name='updated_lessonId' id='update_new_lesson_dropdown' required>
+        <option value="" selected>Select New Lesson</option>
+        {{#each lessons}}
+        <option value='{{this.lessonId}}'>{{this.lessonTime}} {{this.instructor}} {{this.bay}}</option>
+        {{/each}}
+    </select>
+
+    <input type='submit' value='Switch Participant' />
+</form>
+
+
 
 
 

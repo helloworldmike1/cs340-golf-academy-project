@@ -428,6 +428,36 @@ app.post('/add-lesson-participant', async function (req, res) {
 
 
 
+// UPDATE LessonParticipant
+app.post('/update-lesson-participant', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+        // Create and execute our query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_UpdateLessonParticipant(?, ?, ?);`;
+        await db.query(query1, [
+            data.previous_lessonId,
+            data.customerId,
+            data.updated_lessonId
+        ]);
+
+        console.log(`UPDATE LessonParticipant. Customer ID: ${data.customerId} ` +
+            `from Lesson ID: ${data.previous_lessonId} to Lesson ID: ${data.updated_lessonId}`
+        );
+
+        // Redirect the user to the updated webpage
+        res.redirect('/lessons');
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
 // ########################################
 // ########## LISTENER
 
